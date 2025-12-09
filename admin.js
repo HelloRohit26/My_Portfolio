@@ -1,4 +1,296 @@
 // Admin Panel Functions
+// ⚠️ IMPORTANT: Change this password to your own secure password!
+const ADMIN_PASSWORD = 'Rohit@2024'; // Change this!
+
+// Session management
+const AdminAuth = {
+    maxAttempts: 5,
+    lockoutDuration: 15 * 60 * 1000, // 15 minutes
+    sessionDuration: 30 * 60 * 1000, // 30 minutes session
+
+    getAttempts() {
+        return parseInt(sessionStorage.getItem('adminAttempts') || '0');
+    },
+
+    setAttempts(count) {
+        sessionStorage.setItem('adminAttempts', count.toString());
+    },
+
+    getLockoutTime() {
+        return parseInt(sessionStorage.getItem('adminLockout') || '0');
+    },
+
+    setLockout() {
+        sessionStorage.setItem('adminLockout', Date.now().toString());
+    },
+
+    isLockedOut() {
+        const lockoutTime = this.getLockoutTime();
+        if (lockoutTime && Date.now() - lockoutTime < this.lockoutDuration) {
+            return true;
+        }
+        if (lockoutTime) {
+            // Reset after lockout period
+            sessionStorage.removeItem('adminLockout');
+            this.setAttempts(0);
+        }
+        return false;
+    },
+
+    getRemainingLockoutTime() {
+        const lockoutTime = this.getLockoutTime();
+        const remaining = this.lockoutDuration - (Date.now() - lockoutTime);
+        return Math.ceil(remaining / 60000); // minutes
+    },
+
+    isAuthenticated() {
+        const authTime = sessionStorage.getItem('adminAuth');
+        if (authTime && Date.now() - parseInt(authTime) < this.sessionDuration) {
+            return true;
+        }
+        sessionStorage.removeItem('adminAuth');
+        return false;
+    },
+
+    authenticate() {
+        sessionStorage.setItem('adminAuth', Date.now().toString());
+        this.setAttempts(0);
+    },
+
+    logout() {
+        sessionStorage.removeItem('adminAuth');
+    },
+
+    recordFailedAttempt() {
+        const attempts = this.getAttempts() + 1;
+        this.setAttempts(attempts);
+        if (attempts >= this.maxAttempts) {
+            this.setLockout();
+        }
+        return attempts;
+    }
+};
+
+function showLoginModal(onSuccess) {
+    // Check if locked out
+    if (AdminAuth.isLockedOut()) {
+        alert(`🔒 Too many failed attempts. Please try again in ${AdminAuth.getRemainingLockoutTime()} minutes.`);
+        return;
+    }
+
+    // Create login modal
+    const loginModal = document.createElement('div');
+    loginModal.id = 'adminLoginModal';
+    loginModal.innerHTML = `
+        <div class="login-overlay"></div>
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Admin Authentication</h2>
+            </div>
+            <form id="adminLoginForm">
+                <div class="login-input-group">
+                    <label for="adminPassword"><i class="fas fa-key"></i> Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="off" required>
+                </div>
+                <p class="login-attempts">Attempts remaining: ${AdminAuth.maxAttempts - AdminAuth.getAttempts()}</p>
+                <div class="login-buttons">
+                    <button type="submit" class="login-btn primary"><i class="fas fa-unlock"></i> Login</button>
+                    <button type="button" class="login-btn secondary" id="cancelLogin"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.body.appendChild(loginModal);
+
+    // Add styles dynamically
+    if (!document.getElementById('loginModalStyles')) {
+        const styles = document.createElement('style');
+        styles.id = 'loginModalStyles';
+        styles.textContent = `
+            #adminLoginModal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .login-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+            }
+            .login-container {
+                position: relative;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                border-radius: 20px;
+                padding: 40px;
+                width: 90%;
+                max-width: 400px;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 100px rgba(99, 102, 241, 0.1);
+                animation: loginSlideIn 0.3s ease-out;
+            }
+            @keyframes loginSlideIn {
+                from { transform: translateY(-30px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+            .login-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .login-header i {
+                font-size: 3rem;
+                color: #6366f1;
+                margin-bottom: 15px;
+                display: block;
+            }
+            .login-header h2 {
+                color: #fff;
+                font-size: 1.5rem;
+                margin: 0;
+            }
+            .login-input-group {
+                margin-bottom: 20px;
+            }
+            .login-input-group label {
+                display: block;
+                color: #a0a0a0;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+            .login-input-group input {
+                width: 100%;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                color: #fff;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+            .login-input-group input:focus {
+                outline: none;
+                border-color: #6366f1;
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+            }
+            .login-attempts {
+                color: #f59e0b;
+                font-size: 0.85rem;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .login-buttons {
+                display: flex;
+                gap: 15px;
+            }
+            .login-btn {
+                flex: 1;
+                padding: 15px;
+                border: none;
+                border-radius: 10px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            .login-btn.primary {
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                color: #fff;
+            }
+            .login-btn.primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            }
+            .login-btn.secondary {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+            .login-btn.secondary:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            .login-error {
+                background: rgba(239, 68, 68, 0.2);
+                border: 1px solid rgba(239, 68, 68, 0.5);
+                color: #ef4444;
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                text-align: center;
+                animation: shake 0.5s ease-in-out;
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+
+    // Focus password input
+    setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+
+    // Handle form submission
+    document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('adminPassword').value;
+
+        if (password === ADMIN_PASSWORD) {
+            AdminAuth.authenticate();
+            loginModal.remove();
+            onSuccess();
+        } else {
+            const attempts = AdminAuth.recordFailedAttempt();
+
+            if (AdminAuth.isLockedOut()) {
+                alert(`🔒 Too many failed attempts. You are locked out for ${AdminAuth.getRemainingLockoutTime()} minutes.`);
+                loginModal.remove();
+                return;
+            }
+
+            // Show error
+            const existingError = document.querySelector('.login-error');
+            if (existingError) existingError.remove();
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'login-error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Incorrect password`;
+            document.getElementById('adminLoginForm').insertBefore(errorDiv, document.querySelector('.login-input-group'));
+
+            // Update attempts remaining
+            document.querySelector('.login-attempts').textContent = `Attempts remaining: ${AdminAuth.maxAttempts - attempts}`;
+
+            // Clear password field
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminPassword').focus();
+        }
+    });
+
+    // Handle cancel
+    document.getElementById('cancelLogin').addEventListener('click', () => {
+        loginModal.remove();
+    });
+
+    // Close on overlay click
+    loginModal.querySelector('.login-overlay').addEventListener('click', () => {
+        loginModal.remove();
+    });
+}
+
 function initAdminPanel() {
     const adminBtn = document.getElementById('adminBtn');
     const adminModal = document.getElementById('adminModal');
@@ -30,8 +322,24 @@ function initAdminPanel() {
     renderProjectsForm();
     renderSettingsForm();
 
-    adminBtn.addEventListener('click', () => adminModal.classList.add('active'));
-    document.getElementById('closeAdmin').addEventListener('click', () => adminModal.classList.remove('active'));
+    adminBtn.addEventListener('click', () => {
+        // Check if already authenticated
+        if (AdminAuth.isAuthenticated()) {
+            adminModal.classList.add('active');
+        } else {
+            // Show login modal
+            showLoginModal(() => {
+                adminModal.classList.add('active');
+            });
+        }
+    });
+
+    document.getElementById('closeAdmin').addEventListener('click', () => {
+        adminModal.classList.remove('active');
+        // Optionally logout when closing (uncomment next line if desired)
+        // AdminAuth.logout();
+    });
+
     adminModal.addEventListener('click', (e) => {
         if (e.target === adminModal) adminModal.classList.remove('active');
     });

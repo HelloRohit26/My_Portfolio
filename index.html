@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rohit Maurya - Creative Developer Portfolio">
+    <title>Rohit Maurya | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="styles3.css">
+</head>
+
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <div id="particles-js"></div>
+
+    <div class="loader-wrapper" id="loader">
+        <div class="loader">
+            <div class="loader-inner"></div>
+        </div>
+        <span class="loader-text">Loading...</span>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="logo"><span class="logo-text"></span><span class="logo-name">PORTFOLIO</span></a>
+            <ul class="nav-links">
+                <li><a href="#hero" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#github" class="nav-link">GitHub</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="admin-btn" id="adminBtn"><i class="fas fa-cog"></i></button>
+                <a href="#contact" class="cta-btn">Let's Talk</a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="hero-container">
+            <div class="hero-content" data-aos="fade-right">
+                <div class="hero-badge"><span class="status-dot"></span><span>Available for opportunities</span></div>
+                <h1 class="hero-title"><span class="greeting">Hello, I'm</span><span class="name-line"><span
+                            class="name" id="typedName"></span><span class="cursor-blink">|</span></span></h1>
+                <div class="hero-roles"><span class="role-text" id="roleText"></span></div>
+                <p class="hero-description" id="profileSummary">A passionate developer crafting digital experiences that
+                    inspire.</p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary"><span>View My Work</span><i
+                            class="fas fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn btn-outline"><span>Get In Touch</span></a>
+                </div>
+                <div class="hero-social" id="heroSocial"></div>
+            </div>
+            <div class="hero-visual" data-aos="fade-left">
+                <div class="profile-frame">
+                    <div class="profile-glow"></div>
+                    <div class="profile-ring ring-1"></div>
+                    <div class="profile-ring ring-2"></div>
+                    <div class="profile-image-wrapper">
+                        <video autoplay loop muted playsinline class="profile-video" id="profileVideo">
+                            <source src="assets/profile.mp4" type="video/mp4">
+                            <source src="assets/profile.webm" type="video/webm">
+                            <img src="assets/profile.jpg" alt="Rohit Maurya" class="profile-image" id="profileImage">
+                        </video>
+                    </div>
+                    <div class="floating-icons" id="floatingIcons"></div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div><span>Scroll</span>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-tag">Get To Know</span>
+                <h2 class="section-title">About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image" data-aos="fade-right">
+                    <div class="about-img-wrapper"><img src="assets/profile.jpg" alt="About" class="about-img">
+                        <div class="experience-badge"><span class="exp-number"></span><span class="exp-text"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-info" data-aos="fade-left">
+                    <div class="about-cards" id="aboutCards"></div>
+                    <div class="about-text">
+                        <p id="aboutDescription">I'm a passionate Full Stack Developer with a keen eye for detail.</p>
+                    </div>
+                    <div class="about-details" id="aboutDetails"></div>
+                    <a href="assets/resume.pdf" class="btn btn-primary" download><span>Download Resume</span><i
+                            class="fas fa-download"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects" id="projects">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up"><span class="section-tag">My Work</span>
+                <h2 class="section-title">Featured Projects</h2>
+            </div>
+            <div class="projects-filter" id="projectsFilter"></div>
+            <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+    </section>
+
+    <section class="skills" id="skills">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up"><span class="section-tag">My Expertise</span>
+                <h2 class="section-title">Skills & Technologies</h2>
+            </div>
+            <div class="skills-categories" id="skillCategories"></div>
+            <div class="skills-grid" id="skillsGrid"></div>
+        </div>
+    </section>
+
+    <section class="github-section" id="github">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up"><span class="section-tag">Code Repository</span>
+                <h2 class="section-title">GitHub Activity</h2>
+            </div>
+            <div class="github-content">
+                <div class="github-profile" data-aos="fade-right">
+                    <div class="github-avatar"><img id="githubAvatar" src="" alt="GitHub"></div>
+                    <div class="github-info">
+                        <h3 id="githubName">Loading...</h3>
+                        <p id="githubBio">Loading bio...</p>
+                        <div class="github-stats">
+                            <div class="stat-item"><i class="fas fa-book"></i><span
+                                    id="githubRepos">0</span><label>Repos</label></div>
+                            <div class="stat-item"><i class="fas fa-users"></i><span
+                                    id="githubFollowers">0</span><label>Followers</label></div>
+                        </div>
+                        <a href="" id="githubLink" target="_blank" class="btn btn-outline"><i
+                                class="fab fa-github"></i><span>View Profile</span></a>
+                    </div>
+                </div>
+                <div class="github-repos" data-aos="fade-left">
+                    <h3>Latest Repos</h3>
+                    <div class="repos-grid" id="reposGrid"></div>
+                </div>
+            </div>
+            <div class="github-graph" data-aos="fade-up"><img id="contributionGraph" src="" alt="Contributions"
+                    class="contribution-img"></div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up"><span class="section-tag">Get In Touch</span>
+                <h2 class="section-title">Contact Me</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info" data-aos="fade-right">
+                    <h3>Let's Create Something Amazing</h3>
+                    <div class="contact-cards" id="contactCards"></div>
+                    <div class="contact-social" id="contactSocial"></div>
+                </div>
+                <form class="contact-form" id="contactForm" data-aos="fade-left">
+                    <div class="form-group"><input type="text" id="formName" required><label>Your Name</label></div>
+                    <div class="form-group"><input type="email" id="formEmail" required><label>Your Email</label></div>
+                    <div class="form-group"><input type="text" id="formSubject" required><label>Subject</label></div>
+                    <div class="form-group"><textarea id="formMessage" rows="5"
+                            required></textarea><label>Message</label></div>
+                    <button type="submit" class="btn btn-primary"><span>Send Message</span><i
+                            class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand"><a href="#hero" class="footer-logo"><span>Rohit</span><span
+                        class="logo-dot">.</span><span>Maurya</span></a>
+                <p>Crafting digital experiences.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Follow</h4>
+                <div class="social-icons" id="footerSocial"></div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="currentYear"></span> Rohit Maurya</p>
+        </div>
+    </footer>
+
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-panel" id="adminPanel"></div>
+    </div>
+    <div class="project-modal" id="projectModal">
+        <div class="project-modal-content" id="projectModalContent"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.0/dist/vanilla-tilt.min.js"></script>
+    <script src="storage.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
